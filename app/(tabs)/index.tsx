@@ -1,11 +1,20 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image, StyleSheet, Platform, Button } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import init from 'react_native_mqtt';
+import { useEffect, useState } from 'react';
 
 export default function HomeScreen() {
+  const [message, setMessage] = useState(''); 
+  useEffect(() => { 
+    const client = mqtt.connect('ws://broker.emqx.io:8083'); 
+    client.subscribe('test'); 
+    client.on('message', (topic, message) => { setMessage(message.toString()); }); 
+  },[])
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -20,7 +29,12 @@ export default function HomeScreen() {
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
+
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
+        <Button 
+        onPress={()=> alert("hello")}
+        title="Press me"
+      />
         <ThemedText>
           Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
           Press{' '}
